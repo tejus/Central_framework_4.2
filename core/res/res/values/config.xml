@@ -972,6 +972,6 @@
          the GPU to handle. -->
     <integer name="config_wallpaperMaxWidth">-1</integer>
 
-    <bool name="config_fmSeparateVolumeControl">true</bool>
+    <bool name="config_fmSeparateVolumeControl">false</bool>
 
 </resources>
