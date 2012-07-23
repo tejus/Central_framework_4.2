@@ -106,6 +106,8 @@ interface IAudioService {
 
     boolean isBluetoothScoOn();
 
+    boolean isFmActive();
+
     void setBluetoothA2dpOn(boolean on);
 
     boolean isBluetoothA2dpOn();
