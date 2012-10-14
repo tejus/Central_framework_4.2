@@ -3873,16 +3873,18 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     if (isFmActive()) {
                         handleVolumeKey(AudioManager.STREAM_FM, keyCode);
                     } else if (isMusicActive()) {
-                        if (mVolBtnMusicControls && down && (keyCode != KeyEvent.KEYCODE_VOLUME_MUTE)) {
-                            // initialize long press flag to false for volume events
-                            mIsLongPress = false;
-                            // if the button is held long enough, the following
-                            // procedure will set mIsLongPress=true
-                            handleVolumeLongPress(keyCode);
+                    if (mVolBtnMusicControls && down && (keyCode != KeyEvent.KEYCODE_VOLUME_MUTE)) {
+                        mIsLongPress = false;
+                        int newKeyCode = event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP ?
+                                KeyEvent.KEYCODE_MEDIA_NEXT : KeyEvent.KEYCODE_MEDIA_PREVIOUS;
+                        Message msg = mHandler.obtainMessage(MSG_DISPATCH_VOLKEY_WITH_WAKE_LOCK,
+                                new KeyEvent(event.getDownTime(), event.getEventTime(), event.getAction(), newKeyCode, 0));
+                        msg.setAsynchronous(true);
+                        mHandler.sendMessageDelayed(msg, ViewConfiguration.getLongPressTimeout());
                         break;
                     } else {
                         if (mVolBtnMusicControls && !down) {
-                            handleVolumeLongPressAbort();
+                            mHandler.removeMessages(MSG_DISPATCH_VOLKEY_WITH_WAKE_LOCK);
                             if (mIsLongPress) {
                                 break;
                             }
