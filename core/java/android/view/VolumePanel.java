@@ -102,6 +102,10 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
     public static final String ACTION_VOLUME_OVERLAY_CHANGED
         = "android.intent.action.VOLUME_OVERLAY_CHANGED";
     private static final int FM_VOLUME_TEXT = com.android.internal.R.string.volume_fm;
+    public static final int VOLUME_OVERLAY_SINGLE = 0;
+    public static final int VOLUME_OVERLAY_EXPANDABLE = 1;
+    public static final int VOLUME_OVERLAY_EXPANDED = 2;
+    public static final int VOLUME_OVERLAY_NONE = 3;
 
     protected Context mContext;
     private AudioManager mAudioManager;
