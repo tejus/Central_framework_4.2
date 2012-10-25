@@ -31,6 +31,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -128,7 +129,7 @@ public class PowerWidget extends FrameLayout {
     private long[] mLongPressVibePattern;
 
     private LinearLayout mButtonLayout;
-    private HorizontalScrollView mScrollView;
+    private SnappingScrollView mScrollView;
 
     private static final FrameLayout.LayoutParams PARAMS_BRIGHTNESS = new FrameLayout.LayoutParams(
             LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -279,12 +280,43 @@ public class PowerWidget extends FrameLayout {
         mButtonNames.clear();
     }
 
-   public static float convertDpToPixel(float dp,Context context){
-    Resources resources = context.getResources();
-    DisplayMetrics metrics = resources.getDisplayMetrics();
-    float px = dp * (metrics.densityDpi/160f);
-    return px;
-}
+    static class SnappingScrollView extends HorizontalScrollView {
+
+        private boolean mSnapTrigger = false;
+
+        public SnappingScrollView(Context context) {
+            super(context);
+        }
+
+        Runnable mSnapRunnable = new Runnable(){
+            @Override
+            public void run() {
+                int mSelectedItem = ((getScrollX() + (BUTTON_LAYOUT_PARAMS.width / 2)) / BUTTON_LAYOUT_PARAMS.width);
+                int scrollTo = mSelectedItem * BUTTON_LAYOUT_PARAMS.width;
+                smoothScrollTo(scrollTo, 0);
+                mSnapTrigger = false;
+            }
+        };
+
+        @Override
+        protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+            super.onScrollChanged(l, t, oldl, oldt);
+            if (Math.abs(oldl - l) <= 1 && mSnapTrigger) {
+                removeCallbacks(mSnapRunnable);
+                postDelayed(mSnapRunnable, 100);
+            }
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent ev) {
+            int action = ev.getAction();
+            if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
+                mSnapTrigger = true;
+            }
+            return super.onTouchEvent(ev);
+        }
+
+    }
 
     private void recreateButtonLayout() {
         removeAllViews();
@@ -317,7 +349,7 @@ public class PowerWidget extends FrameLayout {
         // we determine if we're using a horizontal scroll view based on a threshold of button counts
         if (mButtonLayout.getChildCount() > LAYOUT_SCROLL_BUTTON_THRESHOLD) {
             // we need our horizontal scroll view to wrap the linear layout
-            mScrollView = new HorizontalScrollView(mContext);
+            mScrollView = new SnappingScrollView(mContext);
             // make the fading edge the size of a button (makes it more noticible that we can scroll
             mScrollView.setFadingEdgeLength(mContext.getResources().getDisplayMetrics().widthPixels / LAYOUT_SCROLL_BUTTON_THRESHOLD);
             mScrollView.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
@@ -333,6 +365,14 @@ public class PowerWidget extends FrameLayout {
 	if (mBrightnessLocation == BRIGHTNESS_LOC_BOTTOM) addBrightness(mBrightnessLayout);
 	addView(mBrightnessLayout, WIDGET_BRIGHTNESS_LAYOUT_PARAMS);
     }
+   public static float convertDpToPixel(float dp,Context context){
+    Resources resources = context.getResources();
+    DisplayMetrics metrics = resources.getDisplayMetrics();
+    float px = dp * (metrics.densityDpi/160f);
+    return px;
+}
+
+
 
     public void updateAllButtons() {
         // cycle through our buttons and update them
@@ -412,17 +452,12 @@ public class PowerWidget extends FrameLayout {
         // now check if we need to display the widget still
         boolean displayPowerWidget = Settings.System.getInt(resolver,
                    Settings.System.EXPANDED_VIEW_WIDGET, 1) == 1;
-        View notifScroll = ((ViewGroup) getParent()).findViewById(R.id.scroll);
-        MarginLayoutParams param = (MarginLayoutParams) notifScroll.getLayoutParams();
         if(!displayPowerWidget) {
-            param.topMargin = (int) getResources().getDimension(R.dimen.notification_panel_header_height);
             setVisibility(View.GONE);
         } else if(displayPowerWidget && (mBrightnessLocation == BRIGHTNESS_LOC_NONE)) {
-            param.topMargin = (int) getResources().getDimension(R.dimen.notification_panel_header_and_widget);
             setVisibility(View.VISIBLE);
         } 
 	else {
-            param.topMargin = (int) getResources().getDimension(R.dimen.notification_panel_header_widget_and_brightness);
             setVisibility(View.VISIBLE);
         }
     }

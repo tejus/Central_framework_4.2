@@ -1658,6 +1658,18 @@ public final class Settings {
         public static final String MODE_RINGER = "mode_ringer";
 
         /**
+		* User interface mode. This is used to change from singlepane mode forcing it to
+		* Change into multipane mode. Default is disabled.
+		*/
+        public static final String FORCE_DUAL_PANEL = "force_dualpanel";
+
+        /**
+         * User interface mode. This is used to change the UI mode forcing it to
+         * Change into tablet mode. Default is disabled. 
+         */
+        public static final String MODE_TABLET_UI = "mode_tabletui";
+
+        /**
          * Determines which streams are affected by ringer mode changes. The
          * stream type's bit should be set to 1 if it should be muted when going
          * into an inaudible ringer mode.
@@ -2510,7 +2522,9 @@ public final class Settings {
          * Display style of the status bar battery information
          * 0: Display the stock battery information
          * 1: Display cm battery percentage implementation / dont show stock icon
-         * 2: Hide the battery information
+         * 2: Display cm circle battery implementation without percentage
+         * 3: Display cm circle battery implementation with percentage
+         * 4: Hide the battery information
          * default: 0
          * @hide
          */
@@ -2594,6 +2608,12 @@ public final class Settings {
          * @hide
          */
         public static final String MENU_UNLOCK_SCREEN = "menu_unlock_screen";
+
+        /**
+         * Whether to unlock the screen with the home key.  The value is boolean (1 or 0).
+         * @hide
+         */
+        public static final String HOME_UNLOCK_SCREEN = "home_unlock_screen";
 
         /**
          * Whether to wake the screen with the volume keys, the value is boolean.
@@ -2805,6 +2825,12 @@ public final class Settings {
          */
         public static final String POWER_MENU_AIRPLANEMODE_ENABLED = "power_menu_airplanemode_enabled";
 
+		/**
+         *Whether power menu full screen toggle is enabled
+         * @hide
+         */
+        public static final String POWER_MENU_EXPANDED_DESKTOP_ENABLED = "power_menu_expanded_desktop_enabled";
+
         /**
          * Whether power menu silent toggle is enabled
          * @hide
@@ -2816,6 +2842,12 @@ public final class Settings {
          * @hide
          */
         public static final String POWER_MENU_PROFILES_ENABLED = "power_menu_profiles_enabled";
+        		
+	/**
+         * Whether to display high end graphics effects disabled on older devices
+         * @hide
+         */
+        public static final String HIGH_END_GFX_ENABLED = "high_end_gfx_enabled";
 
         /**
          * Whether to enable custom rebindings of the actions performed on
@@ -2895,6 +2927,12 @@ public final class Settings {
           * @hide
           */
          public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
+
+		 /**
+          * Statusbar State
+ 		  * @hide
+          */
+         public static final String EXPANDED_DESKTOP_STATE = "expanded_desktop_state";
 
         /**
          * Show the pending notification counts as overlays on the status bar
