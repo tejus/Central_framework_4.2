@@ -1361,6 +1361,23 @@ public final class Settings {
          */
         public static final String WIFI_STATIC_DNS2 = "wifi_static_dns2";
 
+        /**
+         * Allows automatic retrieval of mms contents
+         * <p>Type: INT</p>
+         * 0 -- false
+         * 1 -- true
+         * @hide
+         */
+        public static final String MMS_AUTO_RETRIEVAL = "mms_auto_retrieval";
+
+        /**
+         * Allows automatic retrieval of mms contents during roaming
+         * <p>Type: INT</p>
+         * 0 -- false
+         * 1 -- true
+         * @hide
+         */
+        public static final String MMS_AUTO_RETRIEVAL_ON_ROAMING = "mms_auto_on_roaming";
 
         /**
          * Determines whether remote devices may discover and/or connect to
@@ -1411,6 +1428,43 @@ public final class Settings {
         @Deprecated
         public static final String LOCK_PATTERN_SIZE =
             "lock_pattern_size";
+
+         /**
+         * Whether to show the alt lockscreen layout
+         * @hide
+         */
+        public static final String USE_CIRCLES_LOCKSCREEN = "use_circles_lockscreen";
+
+         /**
+         * Whether to show the alt lockscreen layout
+         * @hide
+         */
+        public static final String USE_BLACKBERRY_LOCKSCREEN = "use_blackberry_lockscreen";
+
+         /**
+         * Sets bg color of alt lockscreen bg
+         * @hide
+         */
+        public static final String CIRCLES_LOCK_BG_COLOR = "circles_lock_bg_color";
+
+         /**
+         * Sets ring color of alt lockscreen
+         * @hide
+         */
+        public static final String CIRCLES_LOCK_RING_COLOR = "circles_lock_ring_color";
+
+         /**
+         * Sets halo color of alt lockscreen
+         * @hide
+         */
+        public static final String CIRCLES_LOCK_HALO_COLOR = "circles_lock_halo_color";
+
+         /**
+         * Sets wave color of alt lockscreen
+         * @hide
+         */
+        public static final String CIRCLES_LOCK_WAVE_COLOR = "circles_lock_wave_color";
+
 
         /**
          * A formatted string of the next alarm that is set, or the empty string
@@ -2310,6 +2364,12 @@ public final class Settings {
         public static final String LOCKSCREEN_VIBRATE_ENABLED = "lockscreen.vibrate_enabled";
 
         /**
+         * Whether the lockscreen vibrate should be enabled.
+         * @hide
+         */
+        public static final String LOCKSCREEN_TRANSPARENT_ENABLED = "lockscreen.transparent_enabled";
+
+        /**
          * Stores values for custom lockscreen targets
          * @hide
          */
@@ -2586,6 +2646,12 @@ public final class Settings {
         public static final String STATUS_BAR_IME_SWITCHER = "status_bar_ime_switcher";
 
         /**
+         * Override and forcefully disable the fullscreen keyboard
+         * @hide
+         */
+        public static final String DISABLE_FULLSCREEN_KEYBOARD = "disable_fullscreen_keyboard";
+
+        /**
          * Whether to use a separate delay for "slide to unlock" and security
          * lock
          * @hide
@@ -2798,6 +2864,54 @@ public final class Settings {
          * @hide
          */
         public static final String LOCKSCREEN_CALENDAR_REMINDERS_ONLY = "lockscreen_calendar_reminders_only";
+        /**
+         * Enable Stylus Gestures
+         *
+         * @hide
+         */
+        public static final String ENABLE_STYLUS_GESTURES = "enable_stylus_gestures";
+
+        /**
+         * Left Swipe Action
+         *
+         * @hide
+         */
+        public static final String GESTURES_LEFT_SWIPE = "gestures_left_swipe";
+
+        /**
+         * Right Swipe Action
+         *
+         * @hide
+         */
+        public static final String GESTURES_RIGHT_SWIPE = "gestures_right_swipe";
+
+        /**
+         * Up Swipe Action
+         *
+         * @hide
+         */
+        public static final String GESTURES_UP_SWIPE = "gestures_up_swipe";
+
+        /**
+         * down Swipe Action
+         *
+         * @hide
+         */
+        public static final String GESTURES_DOWN_SWIPE = "gestures_down_swipe";
+
+        /**
+         * Long press Action
+         *
+         * @hide
+         */
+        public static final String GESTURES_LONG_PRESS = "gestures_long_press";
+
+        /**
+         * double tap Action
+         *
+         * @hide
+         */
+        public static final String GESTURES_DOUBLE_TAP = "gestures_double_tap";
 
         /**
          * Always show the battery status on the lockscreen
@@ -2989,6 +3103,8 @@ public final class Settings {
             WIFI_STATIC_NETMASK,
             WIFI_STATIC_DNS1,
             WIFI_STATIC_DNS2,
+            MMS_AUTO_RETRIEVAL,
+            MMS_AUTO_RETRIEVAL_ON_ROAMING,
             BLUETOOTH_DISCOVERABILITY,
             BLUETOOTH_DISCOVERABILITY_TIMEOUT,
             DIM_SCREEN,
@@ -3057,6 +3173,7 @@ public final class Settings {
             POWER_MENU_REBOOT_ENABLED,
             POWER_MENU_PROFILES_ENABLED,
             LOCKSCREEN_VIBRATE_ENABLED,
+            LOCKSCREEN_TRANSPARENT_ENABLED,
         };
 
         // Settings moved to Settings.Secure
@@ -3299,6 +3416,14 @@ public final class Settings {
         public static final String TABLET_UI = "tablet_ui";
 
         /**
+         * use Alt Activity Resolver Grid
+         * boolean
+         *
+         * @hide
+         */
+        public static final String ACTIVITY_RESOLVER_USE_ALT = "activity_resolver_use_alt";
+
+        /**
          * NFC polling mode configuration key
          *
          * @hide
@@ -3358,13 +3483,35 @@ public final class Settings {
 
         /**
          * @hide
-         * Shows weekday before clock time
-         * 0 - No Day
-         * 1 - Small Day
-         * 2 - Normal Day
+         * Shows custom date before clock time
+         * 0 - No Date
+         * 1 - Small Date
+         * 2 - Normal Date
          */
-        public static final String STATUSBAR_CLOCK_WEEKDAY = "statusbar_clock_weekday";
+        public static final String STATUSBAR_CLOCK_DATE_DISPLAY = "statusbar_clock_date_display";
 
+        /**
+         * @hide
+         * Sets the date string style
+         * 0 - Regular style
+         * 1 - Lowercase
+         * 2 - Uppercase
+         */
+        public static final String STATUSBAR_CLOCK_DATE_STYLE = "statusbar_clock_date_style";
+
+        /**
+         * @hide
+         * Stores the java DateFormat string for the date
+         */
+        public static final String STATUSBAR_CLOCK_DATE_FORMAT = "statusbar_clock_date_format";
+
+        /**
+         * @hide
+         * Show Wifi network name in notification shade
+         * 0 - don't show
+         * 1 - show
+         */
+        public static final String NOTIFICATION_SHOW_WIFI_SSID = "notification_show_wifi_ssid";
 
         /**
          * @hide
