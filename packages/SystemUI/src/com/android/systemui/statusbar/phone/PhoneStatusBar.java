@@ -1046,7 +1046,7 @@ public class PhoneStatusBar extends BaseStatusBar {
         for (View remove : toRemove) {
             mPile.removeView(remove);
         }
-
+	setNotificationsTransparency();
         for (int i=0; i<toShow.size(); i++) {
             View v = toShow.get(i);
             if (v.getParent() == null) {
@@ -2360,7 +2360,7 @@ public class PhoneStatusBar extends BaseStatusBar {
         final int barh = getCloseViewHeight() + getStatusBarHeight();
         final float frac = saturate((float)(panelh - barh) / (disph - barh));
 
-        if (DIM_BEHIND_EXPANDED_PANEL && mHighEndGfx) {
+        if (ActivityManager.isHighEndGfx(mDisplay) && DIM_BEHIND_EXPANDED_PANEL && mHighEndGfx) {
             // woo, special effects
             final float k = (float)(1f-0.5f*(1f-Math.cos(3.14159f * Math.pow(1f-frac, 2.2f))));
             final int color = ((int)(0xB0 * k)) << 24;
@@ -2847,6 +2847,8 @@ public class PhoneStatusBar extends BaseStatusBar {
                     Settings.System.NAVIGATION_BAR_TRANSPARENCY), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NOTIF_WALLPAPER_ALPHA), false, this);
+	    resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NOTIF_ALPHA), false, this);
             update();
         }
 
@@ -2860,6 +2862,7 @@ public class PhoneStatusBar extends BaseStatusBar {
             setStatusBarParams(mStatusBarView);
             setNavigationBarParams();
             setNotificationWallpaperHelper();
+	    setNotificationsTransparency();
         }
     }
 
@@ -2944,13 +2947,27 @@ public class PhoneStatusBar extends BaseStatusBar {
     private void setNotificationWallpaperHelper() {
         float wallpaperAlpha = Settings.System.getFloat(mContext.getContentResolver(), Settings.System.NOTIF_WALLPAPER_ALPHA, 0.0f);
         File file = new File(NOTIF_WALLPAPER_IMAGE_PATH);
-
         if (file.exists()) {
             mNotificationPanel.setBackgroundResource(0);
         } else {
             mNotificationPanel.setBackgroundResource(R.drawable.notification_panel_bg);
             Drawable background = mNotificationPanel.getBackground();
             background.setAlpha((int) ((1-wallpaperAlpha) * 255));
+        }
+    }
+
+    private void setNotificationsTransparency() {
+	// here tchaari sets the notifications transparency
+	float notifAlpha = Settings.System.getFloat(mContext.getContentResolver(), Settings.System.NOTIF_ALPHA, 0.0f);
+	if (mPile != null) {
+            int N = mNotificationData.size();
+            for (int i=0; i<N; i++) {
+              Entry ent = mNotificationData.get(N-i-1);
+	      View expanded = ent.expanded;
+	      if (expanded !=null && expanded.getBackground()!=null) expanded.getBackground().setAlpha((int) ((1-notifAlpha) * 255));
+              View large = ent.getLargeView();
+	      if (large != null && large.getBackground()!=null) large.getBackground().setAlpha((int) ((1-notifAlpha) * 255));
+            }
         }
     }
 
