@@ -1421,13 +1421,19 @@ public final class Settings {
         public static final String LOCK_PATTERN_TACTILE_FEEDBACK_ENABLED =
             "lock_pattern_tactile_feedback_enabled";
 
-	     /**
+         /**
          * @deprecated Use {@link android.provider.Settings.Secure#LOCK_PATTERN_SIZE}
          * instead
          */
         @Deprecated
         public static final String LOCK_PATTERN_SIZE =
             "lock_pattern_size";
+
+         /**
+         * Whether to show the alt lockscreen layout
+         * @hide
+         */
+        public static final String USE_STOCK_LOCKSCREEN = "use_stock_lockscreen";
 
          /**
          * Whether to show the alt lockscreen layout
@@ -1445,7 +1451,13 @@ public final class Settings {
          * Sets bg color of alt lockscreen bg
          * @hide
          */
-        public static final String CIRCLES_LOCK_BG_COLOR = "circles_lock_bg_color";
+        public static final String BLACKBERRY_LOCK_BG_COLOR = "blackberry_lock_bg_color";
+
+         /**
+         * Sets ring alpha of alt lockscreen
+         * @hide
+         */
+        public static final String BLACKBERRY_LOCK_BG_ALPHA = "blackberry_lock_bg_alpha";
 
          /**
          * Sets ring color of alt lockscreen
@@ -1465,6 +1477,23 @@ public final class Settings {
          */
         public static final String CIRCLES_LOCK_WAVE_COLOR = "circles_lock_wave_color";
 
+         /**
+         * Sets ring alpha of alt lockscreen
+         * @hide
+         */
+        public static final String CIRCLES_LOCK_RING_ALPHA = "circles_lock_ring_alpha";
+
+        /**
+         * Sets halo alpha of alt lockscreen
+         * @hide
+         */
+        public static final String CIRCLES_LOCK_HALO_ALPHA = "circles_lock_halo_alpha";
+
+        /**
+         * Sets wave alpha of alt lockscreen
+         * @hide
+         */
+        public static final String CIRCLES_LOCK_WAVE_ALPHA = "circles_lock_wave_alpha";
 
         /**
          * A formatted string of the next alarm that is set, or the empty string
@@ -1712,9 +1741,9 @@ public final class Settings {
         public static final String MODE_RINGER = "mode_ringer";
 
         /**
-		* User interface mode. This is used to change from singlepane mode forcing it to
-		* Change into multipane mode. Default is disabled.
-		*/
+        * User interface mode. This is used to change from singlepane mode forcing it to
+        * Change into multipane mode. Default is disabled.
+        */
         public static final String FORCE_DUAL_PANEL = "force_dualpanel";
 
         /**
@@ -2367,7 +2396,7 @@ public final class Settings {
          * Whether the lockscreen vibrate should be enabled.
          * @hide
          */
-        public static final String LOCKSCREEN_TRANSPARENT_ENABLED = "lockscreen.transparent_enabled";
+        public static final String LOCKSCREEN_TRANSPARENT_ENABLED = "lockscreen_transparent_enabled";
 
         /**
          * Stores values for custom lockscreen targets
@@ -2757,7 +2786,7 @@ public final class Settings {
          */
         public static final String QUIET_HOURS_DIM = "quiet_hours_dim";
 
-		/**
+        /**
          * Whether to remove the sound from outgoing notifications during quiet hours.
          * @hide
          */
@@ -2776,10 +2805,34 @@ public final class Settings {
         public static final String LOCKSCREEN_BACKGROUND = "lockscreen_background";
 
         /**
+         * Sets the lockscreen background style array helper
+         * @hide
+         */
+        public static final String LOCKSCREEN_BACKGROUND_VALUE = "lockscreen_background_VALUE";
+
+        /**
+         * Sets the lockscreen background alpha
+         * @hide
+         */
+        public static final String LOCKSCREEN_ALPHA = "lockscreen_alpha";
+
+        /**
          * Sets the lockscreen layout style
          * @hide
          */
         public static final String LOCKSCREEN_LAYOUT = "lockscreen_layout";
+
+        /**
+         * Show the weather on the lock screen
+         * @hide
+         */
+        public static final String LOCKSCREEN_CLOCK = "lockscreen_clock";
+
+        /**
+         * Show the weather on the lock screen
+         * @hide
+         */
+        public static final String LOCKSCREEN_CLOCK_STYLE = "lockscreen_clock_style";
 
         /**
          * Show the weather on the lock screen
@@ -2973,7 +3026,7 @@ public final class Settings {
          */
         public static final String POWER_MENU_AIRPLANEMODE_ENABLED = "power_menu_airplanemode_enabled";
 
-		/**
+        /**
          *Whether power menu full screen toggle is enabled
          * @hide
          */
@@ -2984,14 +3037,14 @@ public final class Settings {
          * @hide
          */
         public static final String POWER_MENU_SILENTTOGGLE_ENABLED = "power_menu_silenttoggle_enabled";
-		
-		/**
+        
+        /**
          * Whether power menu profiles switcher is enabled
          * @hide
          */
         public static final String POWER_MENU_PROFILES_ENABLED = "power_menu_profiles_enabled";
-        		
-	/**
+                
+        /**
          * Whether to display high end graphics effects disabled on older devices
          * @hide
          */
@@ -3076,9 +3129,9 @@ public final class Settings {
           */
          public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
 
-		 /**
+         /**
           * Statusbar State
- 		  * @hide
+           * @hide
           */
          public static final String EXPANDED_DESKTOP_STATE = "expanded_desktop_state";
 
@@ -3447,7 +3500,7 @@ public final class Settings {
          */
         public static final String NAVIGATION_BAR_HEIGHT_LANDSCAPE = "navigation_bar_height_landscape";
 
-		/**
+        /**
          * @hide
          */
         public static final String STATUSBAR_TOGGLES_BACKGROUND = "statusbar_toggles_background";
@@ -3572,18 +3625,30 @@ public final class Settings {
         public static final String STATUSBAR_BATTERY_BAR_ANIMATE = "statusbar_battery_bar_animate";
 
         /**
+         * Sets the portrait background of notification drawer
+         * @hide
+         */
+        public static final String NOTIFICATION_BACKGROUND = "notification_background";
+
+        /**
+         * Sets the lanscape background of notification drawer
+         * @hide
+         */
+        public static final String NOTIFICATION_BACKGROUND_LANDSCAPE = "notification_background_landscape";
+
+        /**
          * Sets the alpha (transparency) of notification wallpaper
          * @hide
          */
         public static final String NOTIF_WALLPAPER_ALPHA = "notif_wallpaper_alpha";
 
-	/**
+        /**
          * Sets the alpha (transparency) of notifications
          * @hide
          */
         public static final String NOTIF_ALPHA = "notif_alpha";
 
-		/**
+        /**
          * where to show the legacy menu key
          * 0 = right (default)
          * 1 = left
@@ -3689,88 +3754,88 @@ public final class Settings {
 
 
         /**
-		* @hide
-		*/
+        * @hide
+        */
         public static final String SYSTEMUI_NAVRING_1 = "systemui_navring_1";
 
         /**
-		* @hide
-		*/
+        * @hide
+        */
         public static final String SYSTEMUI_NAVRING_2 = "systemui_navring_2";
 
         /**
-		* @hide
-		*/
+        * @hide
+        */
         public static final String SYSTEMUI_NAVRING_3 = "systemui_navring_3";
 
         /**
-		* @hide
-		*/
+        * @hide
+        */
         public static final String SYSTEMUI_NAVRING_4 = "systemui_navring_4";
 
         /**
-		* @hide
-		*/
+        * @hide
+        */
         public static final String SYSTEMUI_NAVRING_5 = "systemui_navring_5";
 
         /**
-		* @hide
-		*/
+        * @hide
+        */
         public static final String SYSTEMUI_NAVRING_AMOUNT = "systemui_navring_amount";
 
         /**
-		* @hide
-		*/
+        * @hide
+        */
         public static final String SYSTEMUI_NAVRING_ASSIST = "assist";
 
         /**
-		* @hide
-		*/
+        * @hide
+        */
         public static final String SYSTEMUI_SOFTKEY_REBOOT = "reboot";
 
         /**
-		* @hide
-		*/
+        * @hide
+        */
         public static final String SYSTEMUI_SOFTKEY_SCREENSHOT = "screenshot";
 
         /**
-		* @hide
-		*/
+        * @hide
+        */
         public static final String SYSTEMUI_SOFTKEY_SCREENOFF = "screenoff";
 
         /**
-		* @hide
-		*/
-		public static final String SYSTEMUI_SOFTKEY_IME_SWITCHER = "ime_switcher";
+        * @hide
+        */
+        public static final String SYSTEMUI_SOFTKEY_IME_SWITCHER = "ime_switcher";
 
         /**
-		* hide
-		*/
-		public static final String SYSTEMUI_SOFTKEY_RING_VIB = "ring_vib";
+        * hide
+        */
+        public static final String SYSTEMUI_SOFTKEY_RING_VIB = "ring_vib";
 
         /**
-		* hide
-		*/
-		public static final String SYSTEMUI_SOFTKEY_RING_SILENT = "ring_silent";
+        * hide
+        */
+        public static final String SYSTEMUI_SOFTKEY_RING_SILENT = "ring_silent";
 
         /**
-		* hide
-		*/
-		public static final String SYSTEMUI_SOFTKEY_RING_VIB_SILENT = "ring_vib_silent";
+        * hide
+        */
+        public static final String SYSTEMUI_SOFTKEY_RING_VIB_SILENT = "ring_vib_silent";
 
         /**
-		* @hide
-		*/
+        * @hide
+        */
         public static final String SYSTEMUI_SOFTKEY_KILL_PROCESS = "killcurrent";
 
         /**
-		* @hide
-		*/
+        * @hide
+        */
         public static final String SYSTEMUI_NAVRING_OVERRIDE_HOME = "systemui_navring_override_home";
 
         /**
-		* @hide
-		*/
+        * @hide
+        */
         public static final int SYSTEMUI_NAVRING_OVERRIDE_HOME_DEF = 0;
 
 
@@ -3780,18 +3845,18 @@ public final class Settings {
          * @hide
          */
         public static final String CUSTOM_CARRIER_LABEL = "custom_carrier_label";
-		
-		 /**
+        
+         /**
          * @hide
          */
         public static final String STATUS_BAR_BRIGHTNESS_SLIDER = "statusbar_brightness_slider";
 
-		/**
+        /**
          * @hide
          */
         public static final String STATUSBAR_TOGGLES_BRIGHTNESS_LOC = "statusbar_toggles_brightness_loc";
 
-		/**
+        /**
          * whether to hide the kill-all-button on recent switcher
          *
          * @hide
@@ -4303,7 +4368,7 @@ public final class Settings {
         public static final String LOCK_PATTERN_TACTILE_FEEDBACK_ENABLED =
             "lock_pattern_tactile_feedback_enabled";
 
-		/**
+        /**
          * Size of pattern lockscreen
          */
         public static final String LOCK_PATTERN_SIZE =
@@ -4348,6 +4413,14 @@ public final class Settings {
          */
         public static final String LOCK_BEFORE_UNLOCK =
             "lock_before_unlock";
+
+        /**
+         * Helper to choose custom lockscreen will be shown before a secure
+         * lock screen
+         * @hide
+         */
+        public static final String LOCK_BEFORE_UNLOCK_VALUE =
+            "lock_before_unlock_VALUE";
 
         /**
          * The saved value for WindowManagerService.setForcedDisplaySize().
