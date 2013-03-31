@@ -4378,9 +4378,11 @@ public final class ActivityThread {
             // Persistent processes on low-memory devices do not get to
             // use hardware accelerated drawing, since this can add too much
             // overhead to the process.
-            if (!ActivityManager.isHighEndGfx() || hwuiForbidden(data.processName)) {
+            if (!ActivityManager.isHighEndGfx()) {
                 HardwareRenderer.disable(false);
             }
+        } else if (hwuiForbidden(data.processName)) {
+            HardwareRenderer.disable(false);
         }
 
         if (mProfiler.profileFd != null) {
