@@ -1225,6 +1225,7 @@
          for a custom path the delivered kernel supports.
          it is disabled by default so devices need to add an overlay to enable -->
     <string name="config_fastChargePath" translatable="false"></string>
+    <bool name="config_fmSeparateVolumeControl">true</bool>
 
     <!-- Integer to configure panel auto brightness mode when changed -->
     <integer name="config_panelAutoBrightnessValue">-1</integer>
