@@ -1120,6 +1120,6 @@
         default is enabled -->
     <bool name="config_slimPie">true</bool>
 
-    <bool name="config_fmSeparateVolumeControl">true</bool>
+    <bool name="config_fmSeparateVolumeControl">false</bool>
 
 </resources>
