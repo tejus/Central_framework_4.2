@@ -1838,12 +1838,7 @@
   <java-symbol type="string" name="inputMethod" />
 
   <!-- Config.xml entries -->
-<<<<<<< HEAD
-=======
   <java-symbol type="string" name="volume_fm" />
-  <java-symbol type="bool" name="config_forceDisableHardwareKeyboard" />
-  <java-symbol type="bool" name="config_hasRotationLockSwitch" />
->>>>>>> 00fd08e... Add fm volume control
   <java-symbol type="integer" name="config_backKillTimeout" />
   <java-symbol type="bool" name="config_hasRotationLockSwitch" />
   <java-symbol type="bool" name="config_show_cmIMESwitcher"/>
