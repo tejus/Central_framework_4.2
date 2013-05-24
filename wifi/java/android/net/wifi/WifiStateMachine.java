@@ -2644,9 +2644,6 @@ public class WifiStateMachine extends StateMachine {
             /* initialize network state */
             setNetworkDetailedState(DetailedState.DISCONNECTED);
 
-            /* set Rx filters to initial state */
-            mWifiNative.initializeRxFilters();
-
             /* Remove any filtering on Multicast v6 at start */
             mWifiNative.stopFilteringMulticastV6Packets();
 
