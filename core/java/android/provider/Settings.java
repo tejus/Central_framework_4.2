@@ -1763,6 +1763,17 @@ public final class Settings {
         public static final String TOUCHKEY_LIGHT_DUR = "touchkey_light_dir";
 
         /**
+         * Correction factor for auto-brightness adjustment light sensor
+         * debounce times.
+         * Smaller factors will make the adjustment more responsive, but might
+         * cause flicker and/or cause higher CPU usage.
+         * Valid range is 0.2 ... 3
+         *
+         * @hide
+         */
+        public static final String AUTO_BRIGHTNESS_RESPONSIVENESS = "auto_brightness_responsiveness";
+
+        /**
          * Whether to enable the electron beam animation when turning screen on
          *
          * @hide */
@@ -1924,7 +1935,7 @@ public final class Settings {
          * Whether to prevent loud volume levels when headset is first plugged in.
          * @hide
          */
-        public static final String SAFE_HEADSET_VOLUME_RESTORE = "safe_headset_volume_restore";
+        public static final String SAFE_HEADSET_VOLUME = "safe_headset_volume";
 
         /**
          * Master volume (float in the range 0.0f to 1.0f).
@@ -2596,6 +2607,12 @@ public final class Settings {
         public static final String PIE_CONTROLS = "pie_controls";
 
         /**
+         * Whether right edge PIE is mirrored or not
+         * @hide
+         */
+        public static final String PIE_MIRROR_RIGHT = "pie_mirror_right";
+
+        /**
          * Pie show text (0 or 1)
          * @hide
          */
@@ -2629,17 +2646,6 @@ public final class Settings {
          * @hide
          */
         public static final String PIE_GRAVITY = "pie_gravity";
-
-        /**
-         * Mask for the locations of the pie for certain UI situations
-         * (1<<0) = LEFT
-         * (1<<1) = BOTTOM
-         * (1<<2) = RIGHT
-         * (1<<3) = TOP
-         * Default: LEFT
-         * @hide
-         */
-        public static final String PIE_TRIGGER_MASK = "pie_trigger_mask";
 
         /**
          * Relative pie size (fraction)
@@ -2966,13 +2972,6 @@ public final class Settings {
          * @hide
          */
         public static final String QS_DISABLE_PANEL = "qs_disable_panel";
-
-        /**
-         * QuickSettings flip button longpress PowerWidget toggle
-         *
-         * @hide
-         */
-        public static final String QS_LONGPRESS_PW_TOGGLE = "qs_longpress_pw_toggle";
 
         /**
          * Use the Notification Power Widget? (Who wouldn't!)
@@ -3314,7 +3313,7 @@ public final class Settings {
          *
          * @hide
          */
-        public static final String TOGGLE_NOTIFICATION_SHADE = "toggle_notification_shade";
+        public static final String TOGGLE_NOTIFICATION_AND_QS_SHADE = "toggle_notification_and_qs_shade";
 
          /**
          * Whether Expanded desktop is currently running or not
@@ -3534,17 +3533,29 @@ public final class Settings {
          */
         public static final String LOCKSCREEN_LONG_MENU_ACTION = "lockscreen_long_menu_action";
 
+        /**
+         * Action for long-pressing assist button on lock screen
+         * @hide
+         */
+        public static final String LOCKSCREEN_LONG_ASSIST_ACTION = "lockscreen_long_assist_action";
+
+        /**
+         * Action for long-pressing app switch button on lock screen
+         * @hide
+         */
+        public static final String LOCKSCREEN_LONG_APP_SWITCH_ACTION = "lockscreen_long_app_switch_action";
+
+        /**
+         * Action for long-pressing camera button on lock screen
+         * @hide
+         */
+        public static final String LOCKSCREEN_LONG_CAMERA_ACTION = "lockscreen_long_camera_action";
+
          /**
           * Always show the battery status on the lockscreen
           * @hide
           */
         public static final String LOCKSCREEN_ALWAYS_SHOW_BATTERY = "lockscreen_always_show_battery";
-
-        /**
-         * Show the pending notification counts as overlays on the status bar
-         * @hide
-         */
-        public static final String STATUS_BAR_NOTIF_COUNT = "status_bar_notif_count";
 
         /**
          * Show the pending notification counts as overlays on the status bar
@@ -3634,6 +3645,12 @@ public final class Settings {
         public static final String KEYBOARD_ROTATION_TIMEOUT = "keyboard_rotation_timeout";
 
         /**
+         * Forces formal text input.  1 to replace emoticon key with enter key.
+         * @hide
+         */
+        public static final String FORMAL_TEXT_INPUT = "formal_text_input";
+
+        /**
          * Show the pending notification counts as overlays on the status bar
          * Whether to enable custom rebindings of the actions performed on
          * certain key press events.
@@ -3657,6 +3674,9 @@ public final class Settings {
           * 11 - Kill App
           * 12 - Last App
           * 13 - Custom App
+          * 14 - Widget viewpager
+          * 15 - QuickSettings shade toggle
+          * 16 - Camera button
           * @hide
           */
 
@@ -3731,6 +3751,20 @@ public final class Settings {
           * @hide
           */
          public static final String KEY_APP_SWITCH_LONG_PRESS_ACTION = "key_app_switch_long_press_action";
+
+         /**
+          * Action to perform when the camera key is pressed. (Default is 16)
+          * (See KEY_HOME_LONG_PRESS_ACTION for valid values)
+          * @hide
+          */
+         public static final String KEY_CAMERA_ACTION = "key_camera_action";
+
+         /**
+          * Action to perform when the app camera is long-pressed. (Default is 0)
+          * (See KEY_HOME_LONG_PRESS_ACTION for valid values)
+          * @hide
+          */
+         public static final String KEY_CAMERA_LONG_PRESS_ACTION = "key_camera_long_press_action";
 
         /**
         * MediaScanner behavior on boot.
@@ -3997,6 +4031,12 @@ public final class Settings {
         public static final String NOTIFICATIONS_BEHAVIOUR = "notifications_behaviour";
 
         /**
+         * Always show settings button toggle
+         * @hide
+         */
+        public static final String NOTIFICATION_SETTINGS_BUTTON = "notification_settings_btn";
+
+        /**
          * Battery warning preferences
          *
          * 0 = show dialog + play sound (default)
@@ -4008,6 +4048,13 @@ public final class Settings {
          * @hide
          */
         public static final String POWER_UI_LOW_BATTERY_WARNING_POLICY = "power_ui_low_battery_warning_policy";
+
+        /**
+         * Volume key controls ringtone or media sound stream
+         *
+         * @hide
+         */
+        public static final String VOLUME_KEYS_CONTROL_RING_STREAM = "volume_keys_control_ring_stream";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
@@ -5966,13 +6013,6 @@ public final class Settings {
         public static final String UI_INVERTED_MODE = "ui_inverted_mode";
 
         /**
-         * force UI mode change for methods which are not observing
-         * UiModeManagerService
-         * @hide
-         */
-        public static final String UI_MODE_IS_TOGGLED = "ui_mode_is_toggled";
-
-        /**
          * Whether screensavers are enabled.
          * @hide
          */
@@ -6055,7 +6095,6 @@ public final class Settings {
             MOUNT_UMS_NOTIFY_ENABLED,
             UI_NIGHT_MODE,
             UI_INVERTED_MODE,
-            UI_MODE_IS_TOGGLED,
             LOCK_SCREEN_OWNER_INFO,
             LOCK_SCREEN_OWNER_INFO_ENABLED,
             ADVANCED_REBOOT
@@ -6283,6 +6322,24 @@ public final class Settings {
          * @hide
          */
         public static final String POWER_SOUNDS_ENABLED = "power_sounds_enabled";
+
+        /**
+         * Whether to sound when charger power is connected/disconnected
+         * @hide
+         */
+        public static final String POWER_NOTIFICATIONS_ENABLED = "power_notifications_enabled";
+
+        /**
+         * Whether to vibrate when charger power is connected/disconnected
+         * @hide
+         */
+        public static final String POWER_NOTIFICATIONS_VIBRATE = "power_notifications_vibrate";
+
+        /**
+         * URI for power notification sounds
+         * @hide
+         */
+        public static final String POWER_NOTIFICATIONS_RINGTONE = "power_notifications_ringtone";
 
         /**
          * URI for the "wireless charging started" sound.
@@ -7359,6 +7416,9 @@ public final class Settings {
             AUTO_TIME,
             AUTO_TIME_ZONE,
             POWER_SOUNDS_ENABLED,
+            POWER_NOTIFICATIONS_ENABLED,
+            POWER_NOTIFICATIONS_VIBRATE,
+            POWER_NOTIFICATIONS_RINGTONE,
             DOCK_SOUNDS_ENABLED,
             USB_MASS_STORAGE_ENABLED,
             ENABLE_ACCESSIBILITY_GLOBAL_GESTURE_ENABLED,

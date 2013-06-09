@@ -20,9 +20,11 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.LayoutTransition;
 import android.app.StatusBarManager;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.ContentObserver;
@@ -95,6 +97,8 @@ public class NavigationBarView extends LinearLayout implements BaseStatusBar.Nav
     private DeadZone mDeadZone;
 
     private SettingsObserver mSettingsObserver;
+    private BroadcastObserver mBroadcastObserver;
+    private boolean mAttached = false;
 
     // workaround for LayoutTransitions leaving the nav buttons in a weird state (bug 5549288)
     final static boolean WORKAROUND_INVALID_LAYOUT = true;
@@ -107,6 +111,7 @@ public class NavigationBarView extends LinearLayout implements BaseStatusBar.Nav
     final static String ACTION_MENU = "**menu**";
     final static String ACTION_POWER = "**power**";
     final static String ACTION_NOTIFICATIONS = "**notifications**";
+    final static String ACTION_QS = "**quicksettings**";
     final static String ACTION_RECENTS = "**recents**";
     final static String ACTION_SCREENSHOT = "**screenshot**";
     final static String ACTION_IME = "**ime**";
@@ -125,6 +130,7 @@ public class NavigationBarView extends LinearLayout implements BaseStatusBar.Nav
     private int mNavBarButtonColor;
     private int mNavBarButtonColorMode;
     private boolean mIsHome = true;
+    private boolean mAppIsBinded = false;
 
     public String[] mClickActions = new String[7];
     public String[] mLongpressActions = new String[7];
@@ -283,6 +289,7 @@ public class NavigationBarView extends LinearLayout implements BaseStatusBar.Nav
             int mLongpressEnabled = Settings.System.getInt(mContext.getContentResolver(),
                     Settings.System.SYSTEMUI_NAVBAR_LONG_ENABLE, 0);
 
+            mAppIsBinded = false;
             for (int j = 0; j < mNumberOfButtons; j++) {
 
                 if (mLongpressEnabled == 0) {
@@ -325,6 +332,12 @@ public class NavigationBarView extends LinearLayout implements BaseStatusBar.Nav
             setBackground(bacd);
         }
         updateKeyguardAlpha();
+    }
+
+    public void recreateNavigationBar() {
+        setBackgroundResource(0);
+        setBackgroundResource(R.drawable.nav_bar_bg);
+        makeBar();
     }
 
     private void addLightsOutButton(LinearLayout root, View v, boolean landscape, boolean empty) {
@@ -427,6 +440,7 @@ public class NavigationBarView extends LinearLayout implements BaseStatusBar.Nav
             if (!drawableSet && clickAction != null && !clickAction.startsWith("**")) {
                 // here it's not a system action (**action**), so it must be an
                 // app intent
+                mAppIsBinded = true;
                 try {
                     Drawable d = mContext.getPackageManager().getActivityIcon(
                             Intent.parseUri(clickAction, 0));
@@ -454,7 +468,7 @@ public class NavigationBarView extends LinearLayout implements BaseStatusBar.Nav
         }
 
         if (!drawableSet) {
-            v.setImageDrawable(getNavbarIconImage(landscape, clickAction));
+            v.setImageDrawable(getNavbarIconImage(clickAction));
             if (mNavBarButtonColor == 0x00000000)
                 v.setColorFilter(null);
             else
@@ -796,27 +810,41 @@ public class NavigationBarView extends LinearLayout implements BaseStatusBar.Nav
              group.setMotionEventSplittingEnabled(false);
          }
          mCurrentView = mRotatedViews[Surface.ROTATION_0];
-
-         // this takes care of activity broadcasts for alpha mode
-         BroadcastObserver broadcastObserver = new BroadcastObserver(new Handler());
-         broadcastObserver.observe();
-
-         // this takes care of making the buttons
-         mSettingsObserver = new SettingsObserver(new Handler());
          updateSettings();
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mSettingsObserver.observe();
-        updateSettings();
+        if (!mAttached) {
+            mAttached = true;
+            // this takes care of activity broadcasts for alpha mode
+            mBroadcastObserver = new BroadcastObserver(new Handler());
+            mBroadcastObserver.observe();
+
+            // this takes care of making the buttons
+            mSettingsObserver = new SettingsObserver(new Handler());
+            mSettingsObserver.observe();
+
+            // add intent actions to listen on it
+            // apps available to check if apps on external sdcard
+            // are available and reconstruct the button icons
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
+            filter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
+            mContext.registerReceiver(mBroadcastReceiver, filter);
+        }
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        mContext.getContentResolver().unregisterContentObserver(mSettingsObserver);
         super.onDetachedFromWindow();
+        if (mAttached) {
+            mAttached = false;
+            mContext.unregisterReceiver(mBroadcastReceiver);
+            mContext.getContentResolver().unregisterContentObserver(mSettingsObserver);
+            mContext.getContentResolver().unregisterContentObserver(mBroadcastObserver);
+        }
     }
 
     public void reorient() {
@@ -906,6 +934,19 @@ public class NavigationBarView extends LinearLayout implements BaseStatusBar.Nav
         int a = Math.round(alpha * 255);
         bg.setAlpha(a);
     }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE.equals(action)
+                        || Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE.equals(action)) {
+                if (mAppIsBinded) {
+                    updateSettings();
+                }
+            }
+        }
+    };
 
     class BroadcastObserver extends ContentObserver {
         BroadcastObserver(Handler handler) {
@@ -1060,7 +1101,7 @@ public class NavigationBarView extends LinearLayout implements BaseStatusBar.Nav
 
     }
 
-    private Drawable getNavbarIconImage(boolean landscape, String uri) {
+    private Drawable getNavbarIconImage(String uri) {
 
         if (uri == null)
             return getResources().getDrawable(R.drawable.ic_sysbar_null);
@@ -1102,6 +1143,9 @@ public class NavigationBarView extends LinearLayout implements BaseStatusBar.Nav
             } else if (uri.equals(ACTION_NOTIFICATIONS)) {
 
                 return getResources().getDrawable(R.drawable.ic_sysbar_notifications);
+            } else if (uri.equals(ACTION_QS)) {
+
+                return getResources().getDrawable(R.drawable.ic_sysbar_qs);
             }
         }
 

@@ -258,7 +258,7 @@ public class PhoneStatusBarView extends PanelBar {
         mBar.setupTriggers(false);
 
         Settings.System.putInt(mContext.getContentResolver(),
-            Settings.System.TOGGLE_NOTIFICATION_SHADE, 0);
+            Settings.System.TOGGLE_NOTIFICATION_AND_QS_SHADE, 0);
     }
 
     @Override
@@ -358,7 +358,7 @@ public class PhoneStatusBarView extends PanelBar {
 
     public void updateShortcutsVisibility() {
         // Notification Shortcuts check for fully expanded panel
-        if (mBar.mSettingsButton == null || mBar.mNotificationButton == null) {
+        if (mBar.mQuickSettingsButton == null || mBar.mNotificationButton == null) {
             // Tablet
             if (mFullyOpenedPanel != null) {
                 mBar.updateNotificationShortcutsVisibility(true);
@@ -367,8 +367,8 @@ public class PhoneStatusBarView extends PanelBar {
             }
         } else {
             // Phone
-            if (mFullyOpenedPanel != null && (mBar.mSettingsButton.getVisibility() == View.VISIBLE &&
-                    !(mBar.mSettingsButton.getVisibility() == View.VISIBLE &&
+            if (mFullyOpenedPanel != null && (mBar.mQuickSettingsButton.getVisibility() == View.VISIBLE &&
+                    !(mBar.mQuickSettingsButton.getVisibility() == View.VISIBLE &&
                     mBar.mNotificationButton.getVisibility() == View.VISIBLE))) {
                 mBar.updateNotificationShortcutsVisibility(true);
             } else {

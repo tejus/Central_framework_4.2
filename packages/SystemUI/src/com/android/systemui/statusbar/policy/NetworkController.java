@@ -315,6 +315,10 @@ public class NetworkController extends BroadcastReceiver {
         notifySignalsChangedCallbacks(cb);
     }
 
+    public void removeNetworkSignalChangedCallback(NetworkSignalChangedCallback cb) {
+        mSignalsChangedCallbacks.remove(cb);
+    }
+
     public void refreshSignalCluster(SignalCluster cluster) {
         cluster.setWifiIndicators(
                 // only show wifi in the cluster if connected or if wifi-only
@@ -635,6 +639,12 @@ public class NetworkController extends BroadcastReceiver {
                     mDataTypeIconId = R.drawable.stat_sys_data_connected_hp;
                     mContentDescriptionDataType = mContext.getString(
                             R.string.accessibility_data_connection_HP);
+                    break;
+                case TelephonyManager.NETWORK_TYPE_DCHSPAP:
+                    mDataIconList = TelephonyIcons.DATA_DC[mInetCondition];
+                    mDataTypeIconId = R.drawable.stat_sys_data_connected_dc;
+                    mContentDescriptionDataType = mContext.getString(
+                            R.string.accessibility_data_connection_DC);
                     break;
                 case TelephonyManager.NETWORK_TYPE_CDMA:
                     if (!mShowAtLeastThreeGees) {
@@ -1123,12 +1133,7 @@ public class NetworkController extends BroadcastReceiver {
             // look again; your radios are now airplanes
             mContentDescriptionPhoneSignal = mContext.getString(
                     R.string.accessibility_airplane_mode);
-            if (Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.PIE_DISABLE_STATUSBAR_INFO, 0) == 0) {
-                mAirplaneIconId = R.drawable.stat_sys_signal_flightmode;
-            } else {
-                mAirplaneIconId = 0;
-            }
+            mAirplaneIconId = R.drawable.stat_sys_signal_flightmode;
             mPhoneSignalIconId = mDataSignalIconId = mDataTypeIconId = mQSDataTypeIconId = 0;
             mQSPhoneSignalIconId = 0;
 
