@@ -2765,40 +2765,7 @@ public final class Settings {
         /**
          * @hide
          */
-        public static final String PIE_BUTTONS_QTY = "pie_buttons_qty";
-
-        /**
-         * @hide
-         */
-        public static final String[] PIE_CUSTOM_ACTIVITIES = new String[] {
-            "pie_custom_intent_0",
-            "pie_custom_intent_1",
-            "pie_custom_intent_2",
-            "pie_custom_intent_3",
-            "pie_custom_intent_4",
-        };
-
-        /**
-         * @hide
-         */
-        public static final String[] PIE_LONGPRESS_ACTIVITIES = new String[] {
-            "pie_longpress_intent_0",
-            "pie_longpress_intent_1",
-            "pie_longpress_intent_2",
-            "pie_longpress_intent_3",
-            "pie_longpress_intent_4",
-        };
-
-        /**
-         * @hide
-         */
-        public static final String[] PIE_CUSTOM_ICONS = new String[] {
-            "pie_custom_icon_0",
-            "pie_custom_icon_1",
-            "pie_custom_icon_2",
-            "pie_custom_icon_3",
-            "pie_custom_icon_4",
-        };
+        public static final String PIE_BUTTONS_CONFIG = "pie_buttons_config";
 
        /**
         *
@@ -2814,46 +2781,7 @@ public final class Settings {
         /**
          * @hide
          */
-        public static final String PIE_BUTTONS_QTY_SECOND_LAYER = "pie_buttons_qty_second_layer";
-
-        /**
-         * @hide
-         */
-        public static final String[] PIE_CUSTOM_ACTIVITIES_SECOND_LAYER = new String[] {
-            "pie_custom_intent_sec_0",
-            "pie_custom_intent_sec_1",
-            "pie_custom_intent_sec_2",
-            "pie_custom_intent_sec_3",
-            "pie_custom_intent_sec_4",
-            "pie_custom_intent_sec_5",
-            "pie_custom_intent_sec_6",
-        };
-
-        /**
-         * @hide
-         */
-        public static final String[] PIE_LONGPRESS_ACTIVITIES_SECOND_LAYER = new String[] {
-            "pie_longpress_intent_sec_0",
-            "pie_longpress_intent_sec_1",
-            "pie_longpress_intent_sec_2",
-            "pie_longpress_intent_sec_3",
-            "pie_longpress_intent_sec_4",
-            "pie_longpress_intent_sec_5",
-            "pie_longpress_intent_sec_6",
-        };
-
-        /**
-         * @hide
-         */
-        public static final String[] PIE_CUSTOM_ICONS_SECOND_LAYER = new String[] {
-            "pie_custom_icon_sec_0",
-            "pie_custom_icon_sec_1",
-            "pie_custom_icon_sec_2",
-            "pie_custom_icon_sec_3",
-            "pie_custom_icon_sec_4",
-            "pie_custom_icon_sec_5",
-            "pie_custom_icon_sec_6",
-        };
+        public static final String PIE_BUTTONS_CONFIG_SECOND_LAYER = "pie_buttons_config_second_layer";
 
        /**
         *
@@ -3383,6 +3311,12 @@ public final class Settings {
         public static final String MENU_UNLOCK_SCREEN = "menu_unlock_screen";
 
         /**
+         * Whether to wake the screen with the home key, the value is boolean.
+         * @hide
+         */
+        public static final String HOME_WAKE_SCREEN = "home_wake_screen";
+
+        /**
          * Whether to wake the screen with the volume keys, the value is boolean.
          * @hide
          */
@@ -3865,46 +3799,7 @@ public final class Settings {
         /**
          * @hide
          */
-        public static final String NAVIGATION_BAR_BUTTONS_QTY = "navigation_bar_buttons_qty";
-
-        /**
-         * @hide
-         */
-        public static final String[] NAVIGATION_CUSTOM_ACTIVITIES = new String[] {
-            "navigation_custom_app_intent_0",
-            "navigation_custom_app_intent_1",
-            "navigation_custom_app_intent_2",
-            "navigation_custom_app_intent_3",
-            "navigation_custom_app_intent_4",
-            "navigation_custom_app_intent_5",
-            "navigation_custom_app_intent_6",
-        };
-
-        /**
-         * @hide
-         */
-        public static final String[] NAVIGATION_LONGPRESS_ACTIVITIES = new String[] {
-            "navigation_longpress_app_intent_0",
-            "navigation_longpress_app_intent_1",
-            "navigation_longpress_app_intent_2",
-            "navigation_longpress_app_intent_3",
-            "navigation_longpress_app_intent_4",
-            "navigation_longpress_app_intent_5",
-            "navigation_longpress_app_intent_6",
-        };
-
-        /**
-         * @hide
-         */
-        public static final String[] NAVIGATION_CUSTOM_APP_ICONS = new String[] {
-            "navigation_custom_app_icon_0",
-            "navigation_custom_app_icon_1",
-            "navigation_custom_app_icon_2",
-            "navigation_custom_app_icon_3",
-            "navigation_custom_app_icon_4",
-            "navigation_custom_app_icon_5",
-            "navigation_custom_app_icon_6",
-        };
+        public static final String SYSTEMUI_NAVBAR_CONFIG= "systemui_navbar_config";
 
        /**
         *
@@ -3957,52 +3852,14 @@ public final class Settings {
         *
         * @hide
         */
-        public static final String SYSTEMUI_NAVRING_AMOUNT = "systemui_navring_amount";
-
-       /**
-        *
-        * @hide
-        */
         public static final String SYSTEMUI_NAVRING_LONG_ENABLE = "systemui_navring_long_enable";
 
         /**
-         * Custom navring actions
+         * Custom navring configuration
          *
          * @hide
          */
-        public static final String[] SYSTEMUI_NAVRING = new String[] {
-                "navring_0",
-                "navring_1",
-                "navring_2",
-                "navring_3",
-                "navring_4",
-        };
-
-        /**
-         * Custom navring long press actions
-         *
-         * @hide
-         */
-        public static final String[] SYSTEMUI_NAVRING_LONG = new String[] {
-                "navring_long_0",
-                "navring_long_1",
-                "navring_long_2",
-                "navring_long_3",
-                "navring_long_4",
-        };
-
-        /**
-         * @hide
-         */
-        public static final String[] NAVRING_CUSTOM_APP_ICONS = new String[] {
-            "navring_custom_app_icon_0",
-            "navring_custom_app_icon_1",
-            "navring_custom_app_icon_2",
-            "navring_custom_app_icon_3",
-            "navring_custom_app_icon_4",
-            "navring_custom_app_icon_5",
-            "navring_custom_app_icon_6",
-        };
+        public static final String SYSTEMUI_NAVRING_CONFIG = "systemui_navring_config";
 
         /**
          * @hide
