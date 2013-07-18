@@ -146,8 +146,6 @@ public class PhoneStatusBar extends BaseStatusBar {
     // will likely move to a resource or other tunable param at some point
     private static final int INTRUDER_ALERT_DECAY_MS = 0; // disabled, was 10000;
 
-    private static final boolean CLOSE_PANEL_WHEN_EMPTIED = true;
-
     private static final int NOTIFICATION_PRIORITY_MULTIPLIER = 10; // see NotificationManagerService
     private static final int HIDE_ICONS_BELOW_SCORE = Notification.PRIORITY_LOW * NOTIFICATION_PRIORITY_MULTIPLIER;
 
@@ -218,6 +216,7 @@ public class PhoneStatusBar extends BaseStatusBar {
     float mNotificationPanelMinHeightFrac;
     boolean mNotificationPanelIsFullScreenWidth;
     TextView mNotificationPanelDebugText;
+    private int mNotificationsSizeOldState = 0;
 
     // settings
     QuickSettingsController mQS;
@@ -424,7 +423,9 @@ public class PhoneStatusBar extends BaseStatusBar {
             if (mCarrierLabel != null) {
                 toggleCarrierAndWifiLabelVisibility();
             }
-            updateStatusBarVisibility();
+            if (mNotificationData != null) {
+                updateStatusBarVisibility();
+            }
             showClock(true);
         }
     }
@@ -1310,25 +1311,31 @@ public class PhoneStatusBar extends BaseStatusBar {
             if (ENABLE_INTRUDERS && old == mCurrentlyIntrudingNotification) {
                 mHandler.sendEmptyMessage(MSG_HIDE_INTRUDER);
             }
-
-            if (CLOSE_PANEL_WHEN_EMPTIED && mNotificationData.size() == 0 && !mAnimating
-                    && !isShowingSettings()) {
-                animateCollapsePanels();
-            }
         }
 
         setAreThereNotifications();
     }
 
     private void updateStatusBarVisibility() {
-        if (Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.AUTO_HIDE_STATUSBAR, 0) == 1) {
-            Settings.System.putInt(mContext.getContentResolver(),
+        switch (Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.AUTO_HIDE_STATUSBAR, 0)) {
+            //autohide if no non-permanent notifications
+            case 1:
+                Settings.System.putInt(mContext.getContentResolver(),
                     Settings.System.HIDE_STATUSBAR,
-                    (mNotificationData.size() == 0) ? 1 : 0);
-        } else {
-            Settings.System.putInt(mContext.getContentResolver(),
+                    hasClearableNotifications() ? 0 : 1);
+                break;
+            //autohide if no notifications
+            case 2:
+                Settings.System.putInt(mContext.getContentResolver(),
+                    Settings.System.HIDE_STATUSBAR,
+                    hasVisibleNotifications() ? 0 : 1);
+                break;
+            case 0:
+            default:
+                Settings.System.putInt(mContext.getContentResolver(),
                     Settings.System.HIDE_STATUSBAR, 0);
+                break;
         }
     }
 
@@ -1466,7 +1473,17 @@ public class PhoneStatusBar extends BaseStatusBar {
     }
 
     boolean hasClearableNotifications() {
-        return mNotificationData.hasClearableItems();
+        if (mNotificationData != null) {
+            return mNotificationData.size() > 0 && mNotificationData.hasClearableItems();
+        }
+        return false;
+    }
+
+    boolean hasVisibleNotifications() {
+        if (mNotificationData != null) {
+            return mNotificationData.size() > 0 && mNotificationData.hasVisibleItems();
+        }
+        return false;
     }
 
     protected void updateNotificationShortcutsVisibility(boolean vis, boolean instant) {
@@ -1514,15 +1531,15 @@ public class PhoneStatusBar extends BaseStatusBar {
     protected void setAreThereNotifications() {
         final boolean any = mNotificationData.size() > 0;
 
-        final boolean clearable = any && mNotificationData.hasClearableItems();
+        final boolean clearable = hasClearableNotifications();
 
         if (DEBUG) {
             Slog.d(TAG, "setAreThereNotifications: N=" + mNotificationData.size()
                     + " any=" + any + " clearable=" + clearable);
         }
 
-        if (mHasFlipSettings 
-                && mFlipSettingsView != null 
+        if (mHasFlipSettings
+                && mFlipSettingsView != null
                 && mFlipSettingsView.getVisibility() == View.VISIBLE
                 && mScrollView.getVisibility() != View.VISIBLE) {
             // the flip settings panel is unequivocally showing; we should not be shown
@@ -1555,7 +1572,7 @@ public class PhoneStatusBar extends BaseStatusBar {
         mClearButton.setEnabled(clearable);
 
         final View nlo = mStatusBarView.findViewById(R.id.notification_lights_out);
-        final boolean showDot = (any&&!areLightsOn());
+        final boolean showDot = (any && !areLightsOn());
         if (showDot != (nlo.getAlpha() == 1.0f)) {
             if (showDot) {
                 nlo.setAlpha(0f);
@@ -1574,7 +1591,10 @@ public class PhoneStatusBar extends BaseStatusBar {
                 .start();
         }
 
-        if (mNotificationData.size() < 2) updateStatusBarVisibility();
+        if (mNotificationData.size() != mNotificationsSizeOldState) {
+            mNotificationsSizeOldState = mNotificationData.size();
+            updateStatusBarVisibility();
+        }
 
         updateCarrierAndWifiLabelVisibility(false);
     }
