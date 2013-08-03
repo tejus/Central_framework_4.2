@@ -1,4 +1,4 @@
-/*
+f/*
  * Copyright (C) 2010 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -3446,7 +3446,8 @@ public class PhoneStatusBar extends BaseStatusBar {
                                     Settings.System.SYSTEMUI_NAVBAR_CONFIG,
                                     UserHandle.USER_CURRENT);
 
-            if (!mOldNavBarConfig.equals(navBarConfig) && mNavigationBarView != null) {
+            if (navBarConfig != null  && mNavigationBarView != null
+                    && !mOldNavBarConfig.equals(navBarConfig)) {
                 mOldNavBarConfig = navBarConfig;
                 mDisableHomeLongpress = false;
                 ArrayList<ButtonConfig> buttonsConfig =
