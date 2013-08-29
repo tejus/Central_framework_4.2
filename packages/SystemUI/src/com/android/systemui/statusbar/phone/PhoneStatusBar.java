@@ -936,6 +936,8 @@ public class PhoneStatusBar extends BaseStatusBar {
 
         updatePropFactorValue();
 
+        mTransparencyManager.setStatusbar(mStatusBarView);
+
         return mStatusBarView;
     }
 
@@ -1181,6 +1183,8 @@ public class PhoneStatusBar extends BaseStatusBar {
 
         prepareNavigationBarView();
         mWindowManager.addView(mNavigationBarView, getNavigationBarLayoutParams());
+        mTransparencyManager.setNavbar(mNavigationBarView);
+        mTransparencyManager.update();
     }
 
     private void repositionNavigationBar() {
@@ -1848,7 +1852,7 @@ public class PhoneStatusBar extends BaseStatusBar {
                 haltTicker();
             }
         }
-        mStatusBarView.updateBackgroundAlpha();
+        mTransparencyManager.update();
     }
 
     @Override
@@ -2728,7 +2732,7 @@ public class PhoneStatusBar extends BaseStatusBar {
 
     @Override
     public void topAppWindowChanged(boolean showMenu) {
-        mStatusBarView.updateBackgroundAlpha();
+        mTransparencyManager.update();
         if (DEBUG) {
             Slog.d(TAG, (showMenu?"showing":"hiding") + " the MENU button");
         }
@@ -3216,8 +3220,8 @@ public class PhoneStatusBar extends BaseStatusBar {
     private void updateSwapXY() {
         if (mNavigationBarView != null
             && mNavigationBarView.mDelegateHelper != null) {
-                if (Settings.System.getInt(mContext.getContentResolver(),
-                            Settings.System.NAVIGATION_BAR_CAN_MOVE, 1) == 1) {
+                if (Settings.System.getIntForUser(mContext.getContentResolver(),
+                            Settings.System.NAVIGATION_BAR_CAN_MOVE, 1, UserHandle.USER_CURRENT) == 1) {
                     // if we are in landscape mode and NavBar can move swap the XY coordinates for NaVRing Swipe
                     mNavigationBarView.mDelegateHelper.setSwapXY((
                             mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE));
@@ -3275,7 +3279,7 @@ public class PhoneStatusBar extends BaseStatusBar {
         }
     }
 
-    private void recreateStatusBar() {
+    private void recreateStatusBar(boolean recreateBackground) {
         mRecreating = true;
         mStatusBarContainer.removeAllViews();
 
@@ -3300,7 +3304,7 @@ public class PhoneStatusBar extends BaseStatusBar {
 
         if (mNavigationBarView != null) {
             // recreate and reposition navigationbar
-            mNavigationBarView.recreateNavigationBar();
+            mNavigationBarView.recreateNavigationBar(recreateBackground);
             repositionNavigationBar();
         }
 
@@ -3351,10 +3355,11 @@ public class PhoneStatusBar extends BaseStatusBar {
             || uiInvertedMode != mCurrUiInvertedMode) {
             if (uiInvertedMode != mCurrUiInvertedMode) {
                 mCurrUiInvertedMode = uiInvertedMode;
+                recreateStatusBar(false);
             } else {
                 mCurrentTheme = (CustomTheme) newTheme.clone();
+                recreateStatusBar(true);
             }
-            recreateStatusBar();
         } else {
 
             if (mClearButton instanceof TextView) {
@@ -3540,7 +3545,7 @@ public class PhoneStatusBar extends BaseStatusBar {
                                     Settings.System.QS_DISABLE_PANEL, 0) == 1;
 
             if (hideSettingsPanel != mHideSettingsPanel) {
-                recreateStatusBar();
+                recreateStatusBar(false);
             }
 
             setNotificationWallpaperHelper();
@@ -3561,7 +3566,7 @@ public class PhoneStatusBar extends BaseStatusBar {
                     && !mOldNavBarConfig.equals(navBarConfig)) {
                 mOldNavBarConfig = navBarConfig;
                 // recreate navigationbar
-                mNavigationBarView.recreateNavigationBar();
+                mNavigationBarView.recreateNavigationBar(false);
                 setDisableHomeLongpress();
             }
         }
