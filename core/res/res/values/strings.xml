@@ -4115,7 +4115,4 @@
     <string name="app_not_found">No application found to handle this action</string>
     <string name="revoke">Revoke</string>
 
-    <!-- Title of the dialog where the user is adjusting the audio volume for FM radio -->
-    <string name="volume_fm">FM radio volume</string>
-
 </resources>
