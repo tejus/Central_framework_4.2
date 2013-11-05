@@ -20,7 +20,6 @@ import android.app.ActivityManagerNative;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.ContentResolver;
-import android.content.ContentService;
 import android.content.ContextWrapper;
 import android.content.Context;
 import android.content.Intent;
