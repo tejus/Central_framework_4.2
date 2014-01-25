@@ -1368,4 +1368,6 @@
         config to 7. -->
     <integer name="config_deviceHardwareKeys">0</integer>
 
+    <bool name="config_fmSeparateVolumeControl">true</bool>
+
 </resources>

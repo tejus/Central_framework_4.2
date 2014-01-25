@@ -1593,6 +1593,22 @@ public class AudioManager {
     }
 
     /**
+     * Checked whether FM radio is active.
+     *
+     * @return true if FM radio is active
+     * @hide
+     */
+    public boolean isFmActive() {
+        IAudioService service = getService();
+        try {
+            return service.isFmActive();
+        } catch (RemoteException e) {
+            Log.e(TAG, "Dead object in isFmActive", e);
+        }
+        return false;
+    }
+
+    /**
      * @hide
      * Checks whether any music or media is actively playing on a remote device (e.g. wireless
      *   display). Note that BT audio sinks are not considered remote devices.
