@@ -266,6 +266,7 @@ public class AudioService extends IAudioService.Stub {
         AppOpsManager.OP_AUDIO_MEDIA_VOLUME,            // STREAM_SYSTEM_ENFORCED
         AppOpsManager.OP_AUDIO_MEDIA_VOLUME,            // STREAM_DTMF
         AppOpsManager.OP_AUDIO_MEDIA_VOLUME,            // STREAM_TTS
+        AppOpsManager.OP_AUDIO_MEDIA_VOLUME,            // STREAM_FM
     };
 
     private final boolean mUseFixedVolume;
